@@ -8,6 +8,7 @@ function helloWord(req: Request, res: Response): void{
     res.status(200).send('Hello Word!!!')
 } 
 
-app.get('/api/hello', helloWord)
-
 app.listen(PORT, () => console.log(`API em execução no URL: http://localhost:${PORT}`))
+
+//Teste
+app.get('/api/hello', helloWord)
