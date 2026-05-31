@@ -34,11 +34,11 @@ export class ClienteRepository{
         const cliente = this.listarClienteID(id);
         
         if (cliente) {
-            if (dadosAtualizados.nome) cliente.nome = dadosAtualizados.nome;
-            if (dadosAtualizados.cpf) cliente.cpf = dadosAtualizados.cpf;
-            if (dadosAtualizados.telefone) cliente.telefone = dadosAtualizados.telefone;
-            if (dadosAtualizados.email !== undefined) cliente.email = dadosAtualizados.email;
-            if (dadosAtualizados.cidade !== undefined) cliente.cidade = dadosAtualizados.cidade;
+            cliente.nome = dadosAtualizados.nome;
+            cliente.cpf = dadosAtualizados.cpf;
+            cliente.telefone = dadosAtualizados.telefone;
+            cliente.email = dadosAtualizados.email;
+            cliente.cidade = dadosAtualizados.cidade;
         }
         
         return cliente;

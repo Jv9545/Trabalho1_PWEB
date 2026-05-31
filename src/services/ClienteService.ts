@@ -37,7 +37,7 @@ export class ClienteService {
             throw new Error("ID não encontrado");
         }
 
-        // Se o CPF for enviado na atualização e for diferente do atual, verifica se já existe
+        // Verifica os campos obrigatorios e verifica se o novo CPF é diferente do atual, se true, ele verifica se nao conflica com algum outro cliente   
         if ( dadosAtualizados.nome && dadosAtualizados.cpf && dadosAtualizados.telefone) {
             if(dadosAtualizados.cpf !== clienteExistente.cpf){
                 if (this.clienteRepositorio.verificaCpf(dadosAtualizados.cpf) != undefined) {
