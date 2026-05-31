@@ -20,4 +20,12 @@ export class ClienteService {
     listar(): Cliente[] {
         return this.clienteRepositorio.listarTodosClientes();
     }
+
+    listarID(id:any): Cliente|undefined{
+        const idToNumber: number = parseInt(id, 10)
+        if(this.clienteRepositorio.listarClienteID(idToNumber) == undefined){
+            throw new Error("ID não encontrado")
+        }
+        return this.clienteRepositorio.listarClienteID(idToNumber)
+    }
 }
