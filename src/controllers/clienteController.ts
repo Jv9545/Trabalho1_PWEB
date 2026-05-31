@@ -24,7 +24,7 @@ export function exibirClientes (req:Request, res:Response){
     }
 }
 
-export function exibirClientesID (req:Request, res:Response){
+export function exibirClienteID (req:Request, res:Response){
     try{
         const id = req.params.id
         const cliente = clienteServico.listarID(id)
