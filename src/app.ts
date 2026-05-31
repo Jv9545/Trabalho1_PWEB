@@ -1,6 +1,8 @@
 import express, {Request, Response } from "express"
 import {cadastrarClientes, exibirClientes, exibirClienteID, atualizarCliente} from "./controllers/clienteController"
 import {cadastrarVendedores, exibirVendedores, exibirVendedorID, atualizarVendedor} from "./controllers/vendedorController"
+import {cadastrarCarros, exibirCarros, exibirCarroID, atualizarCarro} from "./controllers/carroController"
+
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
@@ -26,3 +28,9 @@ app.get('/vendedores', exibirVendedores)
 app.post('/vendedores', cadastrarVendedores)
 app.get('/vendedores/:id', exibirVendedorID)
 app.put('/vendedores/:id', atualizarVendedor)
+
+//Rotas Carros
+app.get('/carros', exibirCarros)
+app.post('/carros', cadastrarCarros)
+app.get('/carros/:id', exibirCarroID)
+app.put('/carros/:id', atualizarCarro)
