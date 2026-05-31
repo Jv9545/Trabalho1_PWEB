@@ -1,5 +1,5 @@
 import express, {Request, Response } from "express"
-import {cadastrarClientes, exibirClientes, exibirClientesID} from "./controllers/clienteController"
+import {cadastrarClientes, exibirClientes, exibirClientesID, atualizarCliente} from "./controllers/clienteController"
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
@@ -16,5 +16,6 @@ app.get('/api/hello', helloWord)
 
 //Rotas Clientes
 app.get('/clientes', exibirClientes)
-app.get('/clientes/:id', exibirClientesID)
 app.post('/clientes', cadastrarClientes)
+app.get('/clientes/:id', exibirClientesID)
+app.put('/clientes/:id', atualizarCliente)

@@ -38,3 +38,24 @@ export function exibirClientesID (req:Request, res:Response){
         res.status(404).json({message: error.message})
     }
 }
+
+export function atualizarCliente(req: Request, res: Response) {
+    try {
+        const id = req.params.id;
+        const clienteAtualizado = clienteServico.atualizar(id, req.body);
+        
+        res.status(200).json({
+            mensagem: "Cliente atualizado com sucesso!",
+            Cliente: clienteAtualizado
+        });
+    } catch (error: any) {
+        if (error.message === "ID não encontrado") {
+            res.status(404).json({ message: error.message })
+        } else if (error.message === "Este CPF já está registado outro cliente"){
+            res.status(409).json({ message: error.message })
+        }else{
+            res.status(400).json({ message: error.message })
+        }
+    }
+}
+

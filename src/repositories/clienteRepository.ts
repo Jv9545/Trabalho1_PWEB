@@ -30,4 +30,18 @@ export class ClienteRepository{
         return this.listaClientes.find(cliente => cliente.cpf === cpf)
     }
 
+    public atualizarCliente(id: number, dadosAtualizados: any): Cliente | undefined {
+        const cliente = this.listarClienteID(id);
+        
+        if (cliente) {
+            if (dadosAtualizados.nome) cliente.nome = dadosAtualizados.nome;
+            if (dadosAtualizados.cpf) cliente.cpf = dadosAtualizados.cpf;
+            if (dadosAtualizados.telefone) cliente.telefone = dadosAtualizados.telefone;
+            if (dadosAtualizados.email !== undefined) cliente.email = dadosAtualizados.email;
+            if (dadosAtualizados.cidade !== undefined) cliente.cidade = dadosAtualizados.cidade;
+        }
+        
+        return cliente;
+    }
+
 }

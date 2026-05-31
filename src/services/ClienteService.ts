@@ -28,4 +28,28 @@ export class ClienteService {
         }
         return this.clienteRepositorio.listarClienteID(idToNumber)
     }
+
+    atualizar(id: any, dadosAtualizados: any): Cliente | undefined{
+        const idToNumber: number = parseInt(id, 10);
+        const clienteExistente = this.clienteRepositorio.listarClienteID(idToNumber);
+
+        if (!clienteExistente) {
+            throw new Error("ID não encontrado");
+        }
+
+        // Se o CPF for enviado na atualização e for diferente do atual, verifica se já existe
+        if ( dadosAtualizados.nome && dadosAtualizados.cpf && dadosAtualizados.telefone) {
+            if(dadosAtualizados.cpf !== clienteExistente.cpf){
+                if (this.clienteRepositorio.verificaCpf(dadosAtualizados.cpf) != undefined) {
+                    throw new Error("Este CPF já está registado outro cliente");
+                }
+            }
+            
+        }else{
+            throw new Error("Preencha todos os campos obrigatorios: nome, CPF e telefone")
+        }
+
+        return this.clienteRepositorio.atualizarCliente(idToNumber, dadosAtualizados);
+    }
+
 }
