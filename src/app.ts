@@ -3,7 +3,7 @@ import {cadastrarClientes, exibirClientes, exibirClienteID, atualizarCliente} fr
 import {cadastrarVendedores, exibirVendedores, exibirVendedorID, atualizarVendedor} from "./controllers/vendedorController"
 import {cadastrarCarros, exibirCarros, exibirCarroID, atualizarCarro} from "./controllers/carroController"
 import {cadastrarEstoques, exibirEstoques, exibirEstoqueID, atualizarEstoque, removerEstoque, exibirEstoqueCarroID} from "./controllers/estoqueController"
-
+import { emitirNotaFiscal, exibirNotasFiscais, exibirNotaFiscalID } from "./controllers/notaFiscalController"
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
@@ -44,4 +44,9 @@ app.get('/estoques/:id', exibirEstoqueID)
 app.get('/estoques/carro/:id_carro', exibirEstoqueCarroID)
 app.put('/estoques/:id', atualizarEstoque)
 app.delete('/estoques/:id', removerEstoque)
+
+//Rotas NotaFical
+app.post('/notas', emitirNotaFiscal)
+app.get('/notas', exibirNotasFiscais)
+app.get('/notas/:id', exibirNotaFiscalID)
 
