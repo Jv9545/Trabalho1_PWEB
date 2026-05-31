@@ -2,6 +2,7 @@ import express, {Request, Response } from "express"
 import {cadastrarClientes, exibirClientes, exibirClienteID, atualizarCliente} from "./controllers/clienteController"
 import {cadastrarVendedores, exibirVendedores, exibirVendedorID, atualizarVendedor} from "./controllers/vendedorController"
 import {cadastrarCarros, exibirCarros, exibirCarroID, atualizarCarro} from "./controllers/carroController"
+import {cadastrarEstoques, exibirEstoques, exibirEstoqueID, atualizarEstoque, removerEstoque, exibirEstoqueCarroID} from "./controllers/estoqueController"
 
 
 const app = express()
@@ -34,3 +35,13 @@ app.get('/carros', exibirCarros)
 app.post('/carros', cadastrarCarros)
 app.get('/carros/:id', exibirCarroID)
 app.put('/carros/:id', atualizarCarro)
+
+
+//Rotas Estoques
+app.post('/estoques', cadastrarEstoques)
+app.get('/estoques', exibirEstoques)
+app.get('/estoques/:id', exibirEstoqueID)
+app.get('/estoques/carro/:id_carro', exibirEstoqueCarroID)
+app.put('/estoques/:id', atualizarEstoque)
+app.delete('/estoques/:id', removerEstoque)
+
