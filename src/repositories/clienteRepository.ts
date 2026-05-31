@@ -14,10 +14,20 @@ export class ClienteRepository{
         return this.instance;
     }
 
-    public cadastroCliente(cliente: Cliente){
+    public insereCliente(cliente: Cliente){
         this.listaClientes.push(cliente)
     }
-   
 
+    public listarTodosClientes(): Cliente[] {
+        return this.listaClientes;
+    }
+
+    public listarClienteID(id:number):Cliente|undefined{
+        return this.listaClientes.find(cliente => cliente.id_cliente === id)
+    }
+
+    public verificaCpf(cpf:string):Cliente|undefined{
+        return this.listaClientes.find(cliente => cliente.cpf === cpf)
+    }
 
 }

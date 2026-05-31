@@ -1,4 +1,5 @@
 import express, {Request, Response } from "express"
+import {cadastrarClientes, exibirClientes} from "./controllers/clienteController"
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
@@ -12,3 +13,7 @@ app.listen(PORT, () => console.log(`API em execução no URL: http://localhost:$
 
 //Teste
 app.get('/api/hello', helloWord)
+
+//Rotas Clientes
+app.get('/clientes', exibirClientes)
+app.post('/clientes', cadastrarClientes)
