@@ -44,4 +44,15 @@ export class ClienteRepository{
         return cliente;
     }
 
+    public removerClienteId(id: number): boolean {
+        const index = this.listaClientes.findIndex(cliente => cliente.id_cliente === id);
+        
+        if (index !== -1) {
+            this.listaClientes.splice(index, 1);
+            return true;
+        }
+        
+        return false;
+    }
+
 }

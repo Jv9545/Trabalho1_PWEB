@@ -59,3 +59,35 @@ export function atualizarCliente(req: Request, res: Response) {
     }
 }
 
+export function removerCliente(req: Request, res: Response) {
+    try {
+        const id = req.params.id;
+        clienteServico.remover(id);
+        
+        res.status(200).json({ mensagem: "Cliente removido com sucesso!" });
+    } catch (error: any) {
+        if (error.message === "Cliente não encontrado") {
+            res.status(404).json({ message: error.message });
+        } else if (error.message.includes("Não é possível remover")) {
+            res.status(422).json({ message: error.message });
+        } else {
+            res.status(400).json({ message: error.message });
+        }
+    }
+}
+
+export function exibirNotasCliente(req: Request, res: Response) {
+    try {
+        const id = req.params.id;
+        const notas = clienteServico.listarNotas(id);
+        
+        res.status(200).json(notas);
+    } catch (error: any) {
+        if (error.message === "Cliente não encontrado") {
+            res.status(404).json({ message: error.message });
+        } else {
+            res.status(400).json({ message: error.message });
+        }
+    }
+}
+

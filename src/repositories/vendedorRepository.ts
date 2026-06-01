@@ -42,4 +42,15 @@ export class VendedorRepository{
         return vendedor;
     }
 
+    public removerVendedorId(id: number): boolean {
+        const index = this.listaVendedores.findIndex(vendedor => vendedor.id_vendedor === id);
+        
+        if (index !== -1) {
+            this.listaVendedores.splice(index, 1);
+            return true;
+        }
+        
+        return false;
+    }
+
 }

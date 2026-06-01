@@ -1,8 +1,10 @@
 import { Cliente } from "../models/Cliente";
-import { ClienteRepository } from "../repositories/clienteRepository";
+import { ClienteRepository } from "../repositories/clienteRepository"
+import { NotaFiscalRepository } from "../repositories/notaFiscalRepository"
 
 export class ClienteService {
-    clienteRepositorio: ClienteRepository = ClienteRepository.getInstance();
+    clienteRepositorio: ClienteRepository = ClienteRepository.getInstance()
+    notaFiscalRepositorio: NotaFiscalRepository = NotaFiscalRepository.getInstance()
 
     cadastrarCliente(ClienteInfo: any): Cliente {
         const {nome, cpf, telefone, email, cidade} = ClienteInfo
@@ -50,6 +52,39 @@ export class ClienteService {
         }
 
         return this.clienteRepositorio.atualizarCliente(idToNumber, dadosAtualizados);
+    }
+
+    remover(id: any): boolean {
+        const idToNumber: number = parseInt(id, 10);
+        const clienteExistente = this.clienteRepositorio.listarClienteID(idToNumber);
+
+        if (!clienteExistente) {
+            throw new Error("Cliente não encontrado");
+        }
+
+        // Regra de negócio: não remover se possuir notas fiscais vinculadas
+        const todasNotas = this.notaFiscalRepositorio.listarTodasNotas();
+        const temNotaVinculada = todasNotas.some(nota => nota.id_cliente === idToNumber);
+        
+        if (temNotaVinculada) {
+            throw new Error("Não é possível remover: cliente possui nota fiscal vinculada.");
+        }
+
+        return this.clienteRepositorio.removerClienteId(idToNumber);
+    }
+
+    listarNotas(id: any) {
+        const idToNumber: number = parseInt(id, 10);
+        const clienteExistente = this.clienteRepositorio.listarClienteID(idToNumber);
+
+        if (!clienteExistente) {
+            throw new Error("Cliente não encontrado");
+        }
+
+        const todasNotas = this.notaFiscalRepositorio.listarTodasNotas();
+        
+        // Filtra e retorna apenas as notas vinculadas ao ID deste cliente
+        return todasNotas.filter(nota => nota.id_cliente === idToNumber);
     }
 
 }

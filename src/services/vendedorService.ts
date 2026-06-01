@@ -1,8 +1,10 @@
 import { Vendedor } from "../models/Vendedor";
-import { VendedorRepository } from "../repositories/vendedorRepository";
+import { VendedorRepository } from "../repositories/vendedorRepository"
+import { NotaFiscalRepository } from "../repositories/notaFiscalRepository"
 
 export class VendedorService {
-    vendedorRepositorio: VendedorRepository = VendedorRepository.getInstance();
+    vendedorRepositorio: VendedorRepository = VendedorRepository.getInstance()
+    notaFiscalRepositorio: NotaFiscalRepository = NotaFiscalRepository.getInstance()
 
     cadastrarVendedor(VendedorInfo: any): Vendedor {
         const {nome, matricula, comissao_percentual} = VendedorInfo
@@ -53,6 +55,39 @@ export class VendedorService {
         }
 
         return this.vendedorRepositorio.atualizarVendedor(idToNumber, dadosAtualizados);
+    }
+
+    remover(id: any): boolean {
+        const idToNumber: number = parseInt(id, 10);
+        const vendedorExistente = this.vendedorRepositorio.listarVendedorID(idToNumber);
+
+        if (!vendedorExistente) {
+            throw new Error("Vendedor não encontrado");
+        }
+
+        // RN02: Não é permitido remover um vendedor que possua notas fiscais vinculadas
+        const todasNotas = this.notaFiscalRepositorio.listarTodasNotas();
+        const temNotaVinculada = todasNotas.some(nota => nota.id_vendedor === idToNumber);
+        
+        if (temNotaVinculada) {
+            throw new Error("Não é possível remover: vendedor possui nota fiscal vinculada.");
+        }
+
+        return this.vendedorRepositorio.removerVendedorId(idToNumber);
+    }
+
+    listarNotas(id: any) {
+        const idToNumber: number = parseInt(id, 10);
+        const vendedorExistente = this.vendedorRepositorio.listarVendedorID(idToNumber);
+
+        if (!vendedorExistente) {
+            throw new Error("Vendedor não encontrado");
+        }
+
+        const todasNotas = this.notaFiscalRepositorio.listarTodasNotas();
+        
+        // Filtra e retorna apenas as notas fiscais que pertencem a este vendedor
+        return todasNotas.filter(nota => nota.id_vendedor === idToNumber);
     }
 
 }
