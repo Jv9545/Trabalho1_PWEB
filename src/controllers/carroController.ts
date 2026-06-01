@@ -63,3 +63,28 @@ export function atualizarCarro(req: Request, res: Response) {
     }
 }
 
+export function exibirCarrosDisponiveis(req: Request, res: Response) {
+    try {
+        res.status(200).json(carroServico.listarDisponiveis());
+    } catch (error: any) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+export function removerCarro(req: Request, res: Response) {
+    try {
+        const id = req.params.id;
+        carroServico.remover(id);
+        
+        res.status(200).json({ mensagem: "Carro removido com sucesso!" });
+    } catch (error: any) {
+        if (error.message === "Carro não encontrado") {
+            res.status(404).json({ message: error.message });
+        } else if (error.message.includes("Não é possível remover")) {
+            res.status(422).json({ message: error.message });
+        } else {
+            res.status(400).json({ message: error.message });
+        }
+    }
+}
+

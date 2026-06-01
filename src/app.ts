@@ -1,7 +1,7 @@
 import express, {Request, Response } from "express"
 import {cadastrarClientes, exibirClientes, exibirClienteID, atualizarCliente} from "./controllers/clienteController"
 import {cadastrarVendedores, exibirVendedores, exibirVendedorID, atualizarVendedor} from "./controllers/vendedorController"
-import {cadastrarCarros, exibirCarros, exibirCarroID, atualizarCarro} from "./controllers/carroController"
+import {cadastrarCarros, exibirCarros, exibirCarroID, atualizarCarro, exibirCarrosDisponiveis, removerCarro} from "./controllers/carroController"
 import {cadastrarEstoques, exibirEstoques, exibirEstoqueID, atualizarEstoque, removerEstoque, exibirEstoqueCarroID} from "./controllers/estoqueController"
 import { emitirNotaFiscal, exibirNotasFiscais, exibirNotaFiscalID } from "./controllers/notaFiscalController"
 
@@ -30,11 +30,13 @@ app.post('/vendedores', cadastrarVendedores)
 app.get('/vendedores/:id', exibirVendedorID)
 app.put('/vendedores/:id', atualizarVendedor)
 
-//Rotas Carros
+// Rotas Carros
 app.get('/carros', exibirCarros)
+app.get('/carros/disponiveis', exibirCarrosDisponiveis)
 app.post('/carros', cadastrarCarros)
 app.get('/carros/:id', exibirCarroID)
 app.put('/carros/:id', atualizarCarro)
+app.delete('/carros/:id', removerCarro)
 
 
 //Rotas Estoques

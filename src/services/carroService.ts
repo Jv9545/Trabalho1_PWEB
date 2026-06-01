@@ -1,8 +1,12 @@
 import { Carro } from "../models/Carro";
-import { CarroRepository } from "../repositories/carroRepository";
+import { CarroRepository } from "../repositories/carroRepository"
+import { EstoqueRepository } from "../repositories/estoqueRepository"
+import { NotaFiscalRepository } from "../repositories/notaFiscalRepository"
 
 export class CarroService {
-    carroRepositorio: CarroRepository = CarroRepository.getInstance();
+    carroRepositorio: CarroRepository = CarroRepository.getInstance()
+    estoqueRepositorio: EstoqueRepository = EstoqueRepository.getInstance()
+    notaFiscalRepositorio: NotaFiscalRepository = NotaFiscalRepository.getInstance()
 
     cadastrarCarro(CarroInfo: any): Carro {
         const {marca, modelo, ano, placa, preco, cor} = CarroInfo
@@ -64,6 +68,39 @@ export class CarroService {
         }
 
         return this.carroRepositorio.atualizarCarro(idToNumber, dadosAtualizados);
+    }
+
+    listarDisponiveis(): Carro[] {
+        const todosCarros = this.carroRepositorio.listarTodosCarros();
+        
+        // Filtra os carros verificando no Estoque se existem e se a quantidade é maior que 0
+        const carrosDisponiveis = todosCarros.filter(carro => {
+            const estoque = this.estoqueRepositorio.verificaCarro(carro.id_carro);
+            return estoque !== undefined && estoque.quantidade > 0;
+        });
+
+        return carrosDisponiveis;
+    }
+
+    remover(id: any): boolean {
+        const idToNumber: number = parseInt(id, 10);
+        const carroExistente = this.carroRepositorio.listarCarroID(idToNumber);
+
+        if (!carroExistente) {
+            throw new Error("Carro não encontrado");
+        }
+
+        if (this.estoqueRepositorio.verificaCarro(idToNumber) !== undefined) {
+            throw new Error("Não é possível remover: carro possui registro em estoque.");
+        }
+
+        const todasNotas = this.notaFiscalRepositorio.listarTodasNotas();
+        const temNotaVinculada = todasNotas.some(nota => nota.id_carro === idToNumber);
+        if (temNotaVinculada) {
+            throw new Error("Não é possível remover: carro possui nota fiscal vinculada.");
+        }
+
+        return this.carroRepositorio.removerCarroId(idToNumber);
     }
 
 }

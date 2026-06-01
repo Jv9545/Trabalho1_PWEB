@@ -43,5 +43,16 @@ export class CarroRepository{
         
         return carro;
     }
+
+    public removerCarroId(id: number): boolean {
+        const index = this.listaCarro.findIndex(carro => carro.id_carro === id);
+        
+        if (index !== -1) {
+            this.listaCarro.splice(index, 1);
+            return true;
+        }
+        
+        return false;
+    }
     
 }
