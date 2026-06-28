@@ -34,6 +34,7 @@ export function executarComandoSQL(query: string, valores: any[]): Promise<any> 
             resolve(resultado);
         });
     });
+    
 }
 
 export async function inicializarBanco(): Promise<void> {
