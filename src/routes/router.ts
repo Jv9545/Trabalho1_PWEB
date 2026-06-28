@@ -2,12 +2,13 @@ import { Router, Request, Response } from 'express';
 import { CarroController } from '../controllers/carroController';
 import { ClienteController } from '../controllers/clienteController';
 import { EstoqueController } from '../controllers/estoqueController';
+import { NotaFiscalController } from '../controllers/notaFiscalController';
 
 const router = Router();
 const carroController = new CarroController();
 const clienteController = new ClienteController();
 const estoqueController = new EstoqueController();
-
+const notaFiscalController = new NotaFiscalController();
 
 // --- Rota Teste ----
 router.get('/api/hello', (req: Request, res: Response): void => {
@@ -40,7 +41,9 @@ router.get('/estoques/:id', (req: Request, res: Response) => { estoqueController
 router.put('/estoques/:id', (req: Request, res: Response) => { estoqueController.atualizarEstoque(req, res); });
 router.delete('/estoques/:id', (req: Request, res: Response) => { estoqueController.removerEstoque(req, res); });
 
-
-
+// --- Rotas Nota Fiscal ---
+router.get('/notas', (req: Request, res: Response) => { notaFiscalController.exibirNotasFiscais(req, res); });
+router.post('/notas', (req: Request, res: Response) => { notaFiscalController.emitirNotaFiscal(req, res); });
+router.get('/notas/:id', (req: Request, res: Response) => { notaFiscalController.exibirNotaFiscalID(req, res); });
 
 export default router;

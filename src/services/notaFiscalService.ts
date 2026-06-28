@@ -12,7 +12,7 @@ export class NotaFiscalService {
     clienteRepositorio: ClienteRepository = ClienteRepository.getInstance();
     vendedorRepositorio: VendedorRepository = VendedorRepository.getInstance();
 
-    emitirNota(notaInfo: any): NotaFiscal {
+    async emitirNota(notaInfo: any): Promise<NotaFiscal> {
         const { numero_nota, data_emissao, valor_total, id_cliente, id_vendedor, id_carro } = notaInfo;
 
         if (!numero_nota || !data_emissao || !valor_total || !id_cliente || !id_vendedor || !id_carro) {
@@ -29,7 +29,8 @@ export class NotaFiscalService {
             throw new Error("A data de emissão não pode ser maior que a data atual");
         }
 
-        if (this.notaFiscalRepositorio.verificaNumeroNota(numero_nota) !== undefined) {
+        const notaExiste = await this.notaFiscalRepositorio.verificaNumeroNota(numero_nota);
+        if (notaExiste !== undefined) {
             throw new Error("Número da nota já existente");
         }
 
@@ -37,39 +38,49 @@ export class NotaFiscalService {
         const idVendedorNum = parseInt(id_vendedor, 10);
         const idCarroNum = parseInt(id_carro, 10);
 
-        if (this.clienteRepositorio.listarClienteID(idClienteNum) === undefined) {
+        const clienteExiste = await this.clienteRepositorio.listarClienteID(idClienteNum);
+        if (clienteExiste === undefined) {
             throw new Error("Cliente não encontrado");
         }
-        if (this.vendedorRepositorio.listarVendedorID(idVendedorNum) === undefined) {
+        
+        const vendedorExiste = await this.vendedorRepositorio.listarVendedorID(idVendedorNum);
+        if (vendedorExiste === undefined) {
             throw new Error("Vendedor não encontrado");
         }
-        if (this.carroRepositorio.listarCarroID(idCarroNum) === undefined) {
+        
+        const carroExiste = await this.carroRepositorio.listarCarroID(idCarroNum);
+        if (carroExiste === undefined) {
             throw new Error("Carro não encontrado");
         }
 
-        const estoque = this.estoqueRepositorio.verificaCarro(idCarroNum);
+        const estoque = await this.estoqueRepositorio.verificaCarro(idCarroNum);
         if (estoque === undefined || estoque.quantidade <= 0) {
             throw new Error("Estoque insuficiente");
         }
         
-        estoque.quantidade -= 1;
+        // Decrementa o estoque efetivamente na base de dados
+        await this.estoqueRepositorio.atualizarEstoque(estoque.id_estoque as number, {
+            quantidade: estoque.quantidade - 1,
+            localizacao_patio: estoque.localizacao_patio
+        });
 
-        const novaNota = new NotaFiscal(numero_nota, dataEmissaoObj, valor_total, idClienteNum, idVendedorNum, idCarroNum);
-        this.notaFiscalRepositorio.insereNota(novaNota);
-        
-        return novaNota;
+        // Passa null como primeiro parâmetro, pois o ID será gerado pela base de dados
+        const novaNota = new NotaFiscal(null, numero_nota, dataEmissaoObj, valor_total, idClienteNum, idVendedorNum, idCarroNum);
+        return await this.notaFiscalRepositorio.insereNota(novaNota);
     }
 
-    listar(): NotaFiscal[] {
-        return this.notaFiscalRepositorio.listarTodasNotas();
+    async listar(): Promise<NotaFiscal[]> {
+        return await this.notaFiscalRepositorio.listarTodasNotas();
     }
 
-    listarID(id: any): NotaFiscal {
+    async listarID(id: any): Promise<NotaFiscal> {
         const idToNumber: number = parseInt(id, 10);
-        const nota = this.notaFiscalRepositorio.listarNotaID(idToNumber);
+        const nota = await this.notaFiscalRepositorio.listarNotaID(idToNumber);
+        
         if (nota === undefined) {
             throw new Error("Nota fiscal não encontrada");
         }
+        
         return nota;
     }
 }
