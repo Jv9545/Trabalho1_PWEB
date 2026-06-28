@@ -4,6 +4,13 @@ import { CarroController } from '../controllers/carroController';
 const router = Router();
 const carroController = new CarroController();
 
+// --- Rota Teste ----
+router.get('/api/hello', (req: Request, res: Response): void => {
+    res.status(200).send('Hello Word!!!');
+});
+
+
+
 // --- Rotas Carros ---
 router.get('/carros/disponiveis', (req: Request, res: Response) => { carroController.exibirCarrosDisponiveis(req, res); });
 router.get('/carros', (req: Request, res: Response) => { carroController.exibirCarros(req, res); });
