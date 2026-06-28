@@ -40,8 +40,11 @@ export async function inicializarBanco(): Promise<void> {
     console.log('Sincronizando schemas do banco de dados...');
     
     const schemas = [
-        ,
-        // Novas tabelas aqui ...
+        CarroRepository.getCreateTableQuery(),
+        VendedorRepository.getCreateTableQuery(),
+        ClienteRepository.getCreateTableQuery(),
+        EstoqueRepository.getCreateTableQuery(),
+        NotaFiscalRepository.getCreateTableQuery()
     ];
     
     try {
